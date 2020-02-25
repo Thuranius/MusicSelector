@@ -1,7 +1,7 @@
 # MusicSelector
 <p>Made for my dad for one of his physical projects</p>
 
-<p>If you are have PulseAudio errors still, install pulse audio with:<br>
+<p>If you are still having PulseAudio errors still, install pulse audio with:<br>
 <code>sudo apt-get install pulseaudio</code></p>
 
 You may need to force the audio to come out of the headphone jacks. To do so use:<br>
