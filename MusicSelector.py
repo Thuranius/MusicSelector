@@ -119,7 +119,6 @@ class Station:
             text = font.render(self.playlist[self.track].replace('.mp3', ''), True, (225,225,225))
             self.queueManager()
         
-
     def deactivateStation(self):
         if self.wallbox != 3:
             self.active = False
@@ -189,8 +188,6 @@ station14 = Station(24,'/media/pi/SOLOTONE/Station Fourteen', False, True, True)
 # || Stations for the two new wallboxes
 melodyStation = Station(16,'/media/pi/SOLOTONE/Melodylane', False,True, wallbox = 2)
 toptenStation = Station(25,'/media/pi/SOLOTONE/TopTen', False,False, wallbox = 3)
-
-
 
 print('Music player is ready for use!')
 
