@@ -17,8 +17,8 @@ pygame.init()
 display_h = 600
 display_w = 1024
 
-#gameDisplay = pygame.display.set_mode((0,0), pygame.FULLSCREEN)
-gameDisplay = pygame.display.set_mode((display_w,display_h))
+gameDisplay = pygame.display.set_mode((0,0), pygame.FULLSCREEN)
+#gameDisplay = pygame.display.set_mode((display_w,display_h))
 
 picToUse = pygame.image.load('/media/pi/SOLOTONE/Images/Cover.jpg')
 
