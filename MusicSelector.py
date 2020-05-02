@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 '''
-- v 1.1.0
+- v 1.1.1
     -- Adding Ability to add more wallboxes to existing RPi.
     -- Adding ability to display current wallbox and song being played
 '''
@@ -9,7 +9,9 @@
 import gpiozero as io
 from signal import pause
 from subprocess import call
-import vlc, os, random, pygame, webbrowser
+import vlc, os, random, pygame, time
+
+time.sleep(20) # <= Making the program sleep for 20 seconds to allow OS to load before trying to take over the screen
 
 # -- This is for the picture display --
 pygame.init()
