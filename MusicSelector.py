@@ -1,6 +1,8 @@
 #!/usr/bin/python3
 
 '''
+- v 1.1.2
+    -- Fixing bugs with TopTen box
 - v 1.1.1
     -- Adding Ability to add more wallboxes to existing RPi.
     -- Adding ability to display current wallbox and song being played
@@ -9,9 +11,7 @@
 import gpiozero as io
 from signal import pause
 from subprocess import call
-import vlc, os, random, pygame, time
-
-time.sleep(20) # <= Making the program sleep for 20 seconds to allow OS to load before trying to take over the screen
+import vlc, os, random, pygame
 
 # -- This is for the picture display --
 pygame.init()
@@ -57,20 +57,17 @@ meloRelay.off()
 class Station:
     track = 0
     active = False
-
+    
+    # -- Combination of GPIO pins to control the audio relay --
     def solotone():
-        print("This will print stuff for the solotone")
         ttRelay.off()
         meloRelay.off()
 
     def melodylane():
-        print("This is the melodylane")
         ttRelay.on()
         meloRelay.on()
 
     def topten():
-        # This one is momentary and will not not stay activated consistantly
-        print("Top ten here!")
         ttRelay.on()
         meloRelay.off()
 
@@ -106,6 +103,11 @@ class Station:
         global picToUse
         picToUse = pygame.image.load(self.pic)
         print("Pin " + str(self.pin) + " is active")
+        if self.wallbox == 3:
+            if self.playing:
+                return
+            else:
+                self.playing == True
         if self.iRadio:
             self.player = vlc.MediaPlayer(self.songLocation)
             self.player.play()
@@ -124,8 +126,6 @@ class Station:
     def deactivateStation(self):
         if self.wallbox != 3:
             self.active = False
-            ttRelay.off()
-            meloRelay.off()
             print("Pin " + str(self.pin) + " has been deactivated")
             global picToUse
             picToUse = pygame.image.load('/media/pi/SOLOTONE/Images/Cover.jpg')
@@ -136,6 +136,11 @@ class Station:
                 global text, npText
                 npText = font.render("", True, (225,225,225))
                 text = font.render('', True, (225,225,225))
+            ttRelay.off()
+            meloRelay.off()
+            if self.wallbox == -1:
+                self.wallbox = 3
+                self.playing = False
 
     def __init__(self, pin, songLocation, iRadio, shuffle = True, shuffleOnActivation = False, wallbox = 1):
         self.pin = pin
@@ -145,7 +150,7 @@ class Station:
         self.iRadio = iRadio
         self.button.when_held = self.activateStation
         self.button.when_released = self.deactivateStation
-        self.func = self.switcher.get(wallbox, lambda: "Not a valid box") # -- *1 --
+        self.func = self.switcher.get(wallbox, lambda: "Not a valid box")
         self.wallbox = wallbox
         if(wallbox == 1):
             self.pic = "/media/pi/SOLOTONE/Images/SolotonePicNew2.jpg"
@@ -153,6 +158,8 @@ class Station:
             self.pic = "/media/pi/SOLOTONE/Images/MelodyPicNew.jpg"
         elif(wallbox == 3):
             self.pic = "/media/pi/SOLOTONE/Images/TopTenPicNew2.jpg"
+            self.button.when_pressed = self.activateStation
+            self.playing = False
         if iRadio == False:
             self.playlist = os.listdir(songLocation)
             if shuffle:
@@ -189,7 +196,7 @@ station14 = Station(24,'/media/pi/SOLOTONE/Station Fourteen', False, True, True)
 
 # || Stations for the two new wallboxes
 melodyStation = Station(16,'/media/pi/SOLOTONE/Melodylane', False,True, wallbox = 2)
-toptenStation = Station(25,'/media/pi/SOLOTONE/TopTen', False,False, wallbox = 3)
+toptenStation = Station(25,'/media/pi/SOLOTONE/TopTen', False,True, wallbox = 3)
 
 print('Music player is ready for use!')
 
